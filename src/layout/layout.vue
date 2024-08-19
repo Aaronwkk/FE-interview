@@ -1,26 +1,23 @@
 <template>
   <a-layout>
+    <!-- 左侧部分开始 -->
     <a-layout-sider :style="{ overflow: 'auto', height: '100vh' }" v-model:collapsed="collapsed">
+      <!-- 左侧logo开始 -->
       <div class="logo">
         <img src="/vite.svg" class="logo_img" alt="Vite logo" />
         <span class="logo_text" v-show="!collapsed">Ant Design</span>
       </div>
-      <a-menu v-model:selectedKeys="selectedKeys" :theme="state.theme" mode="inline">
-        <a-menu-item key="1">
-          <UserOutlined />
-          <span>nav 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <VideoCameraOutlined />
-          <span>nav 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <UploadOutlined />
-          <span>nav 3</span>
-        </a-menu-item>
-      </a-menu>
+      <!-- 左侧logo结束 -->
+
+      <!-- 左侧菜单开始 -->
+      <a-menu v-model:selectedKeys="selectedKeys" :theme="state.theme" :items="menu" mode="inline" @click="menuClicked"/>
+      <!-- 左侧菜单结束 -->
     </a-layout-sider>
+    <!-- 左侧部分结束 -->
+
+    <!-- 右侧部分开始 -->
     <a-layout>
+      <!-- 右侧header开始 -->
       <a-layout-header style="background: #fff; padding: 0; height: 50px;">
         <MenuUnfoldOutlined
           v-if="collapsed"
@@ -29,33 +26,70 @@
         />
         <MenuFoldOutlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
       </a-layout-header>
+      <!-- 右侧header结束 -->
+
+      <!-- 右侧页面主体开始 -->
       <a-layout-content
         :style="{ margin: '12px 10px', padding: '18px', background: '#fff', minHeight: '280px', borderRadius: '4px' }"
       >
         <router-view></router-view>
       </a-layout-content>
+      <!-- 右侧页面主体结束 -->
+
     </a-layout>
+    <!-- 右侧部分结束 -->
   </a-layout>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, h } from 'vue';
+import { useRouter } from 'vue-router'
+
 const selectedKeys = ref(['1']);
 const collapsed = ref(false);
 
+const router = useRouter()
 const state = ref({
   theme: 'dark'
 })
 
+// 菜单
+const menu = ref([
+  {
+    key: 'dashboard',
+    icon: () => h(DashboardOutlined),
+    label: '仪表盘',
+    title: '仪表盘',
+    path: '/dashboard'
+  },
+  {
+    key: 'sub1',
+    icon: () => h(SettingOutlined),
+    label: '系统设置',
+    title: '系统设置',
+    children: [
+      {
+        key: 'user_list',
+        label: '用户管理',
+        icon: () => h(AppstoreOutlined),
+        path: '/user/list'
+      },
+    ],
+  },
+]);
+
+// 菜单点击事件
+const menuClicked = ({item, key}) => {
+  console.log(item, key)
+  // 跳转到菜单配置的path地址取
+  router.push({ path: item.path })
+}
+
 import {
-  UserOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  DownOutlined,
-  DeleteOutlined,
-  LogoutOutlined,
   AppstoreOutlined,
-  UploadOutlined,
-  VideoCameraOutlined,
+  SettingOutlined,
+  DashboardOutlined
 } from '@ant-design/icons-vue'
 
 </script>
