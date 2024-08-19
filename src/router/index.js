@@ -7,18 +7,7 @@ const router = createRouter({
       path: '',
       name: 'basic',
       component: () => import('../layout/Layout.vue'),
-      children: [
-        {
-          path: '/dashboard',
-          name: 'dashboard',
-          component: () => import('../view/dashboard.vue')
-        },
-        {
-          path: '/user/list',
-          name: '/user/list',
-          component: () => import('../view/user_list.vue')
-        }
-      ]
+      children: []
     },
     {
       path: '/login',

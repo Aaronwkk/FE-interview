@@ -10,7 +10,7 @@
       <!-- 左侧logo结束 -->
 
       <!-- 左侧菜单开始 -->
-      <a-menu v-model:selectedKeys="selectedKeys" :theme="state.theme" :items="menu" mode="inline" @click="menuClicked"/>
+      <a-menu v-model:selectedKeys="selectedKeys" :theme="state.theme" :items="state.menu" mode="inline" @click="menuClicked"/>
       <!-- 左侧菜单结束 -->
     </a-layout-sider>
     <!-- 左侧部分结束 -->
@@ -40,48 +40,53 @@
     <!-- 右侧部分结束 -->
   </a-layout>
 </template>
-<script setup lang="ts">
-import { ref, h } from 'vue';
+<script setup lang="js">
+
+import { ref, h, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 
-const selectedKeys = ref(['1']);
+// 加载菜单和图标
+import menu from '../store/menu'
+import * as icons from '@ant-design/icons-vue'
+
+const selectedKeys = ref([]);
 const collapsed = ref(false);
 
 const router = useRouter()
-const state = ref({
-  theme: 'dark'
+
+const state = reactive({
+  theme: 'dark',
+  menu: null, // menu设置为动态值，上边a-menu标签的items值也改为state.menu
 })
 
-// 菜单
-const menu = ref([
-  {
-    key: 'dashboard',
-    icon: () => h(DashboardOutlined),
-    label: '仪表盘',
-    title: '仪表盘',
-    path: '/dashboard'
-  },
-  {
-    key: 'sub1',
-    icon: () => h(SettingOutlined),
-    label: '系统设置',
-    title: '系统设置',
-    children: [
-      {
-        key: 'user_list',
-        label: '用户管理',
-        icon: () => h(AppstoreOutlined),
-        path: '/user/list'
-      },
-    ],
-  },
-]);
+onMounted(() => {
+  // 给state.menu赋值
+  state.menu = menu
+
+  // 我们在menu.js里边配置的icon为一个字符串，但是a-menu组件需要的icon为一个图标组件
+  // 所以这里需要把icon名称转换为icon组件
+  const genMenuIcon = (list) => {
+    for(let item of list) {
+      if (item.icon && typeof item.icon === 'string') {
+        item.icon = h(eval('icons.' + item.icon))
+      }
+
+      if (item.hasOwnProperty('children') && item.children.length > 0) {
+        genMenuIcon(item.children)
+      } else {
+        delete(item.children)
+      }
+    }
+  }
+
+  genMenuIcon(state.menu)
+})
 
 // 菜单点击事件
 const menuClicked = ({item, key}) => {
   console.log(item, key)
   // 跳转到菜单配置的path地址取
-  router.push({ path: item.path })
+  router.push({ path: key })
 }
 
 import {
