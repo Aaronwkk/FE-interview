@@ -15,4 +15,9 @@ export const useAppStore = defineStore('app', {
       this.sideCollapsed = !this.sideCollapsed
     }
   },
+  persist: {
+    enabled: true,
+    key: 'app',
+    paths: ['theme', 'sideCollapsed'],
+  }
 })
