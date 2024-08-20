@@ -10,7 +10,7 @@
       <!-- 左侧logo结束 -->
 
       <!-- 左侧菜单开始 -->
-      <a-menu v-model:selectedKeys="selectedKeys" :theme="theme" :items="state.menu" mode="inline" @click="menuClicked"/>
+      <a-menu v-model:selectedKeys="selectedKeys" :theme="theme" :items="menu" mode="inline" @click="menuClicked"/>
       <!-- 左侧菜单结束 -->
     </a-layout-sider>
     <!-- 左侧部分结束 -->
@@ -48,17 +48,13 @@
 import { ref, h, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 
-// 加载菜单和图标
-import menu from '../store/menu'
-import * as icons from '@ant-design/icons-vue'
-
 import { storeToRefs } from 'pinia'
 // 引入appStore
 import { useAppStore } from '../store/module/app'
 const appStore = useAppStore()
 
 // 引入appStore中的属性
-const { sideCollapsed, theme } = storeToRefs(appStore)
+const { sideCollapsed, theme, menu, selectedKeys, openKeys } = storeToRefs(appStore)
 
 // 定义App操作类，
 const appAction = {
@@ -72,38 +68,8 @@ const appAction = {
   }
 }
 
-const selectedKeys = ref([]);
-
-const router = useRouter()
-
-const state = reactive({
-  menu: null, // menu设置为动态值，上边a-menu标签的items值也改为state.menu
-})
-
-onMounted(() => {
-  // 给state.menu赋值
-  state.menu = menu
-
-  // 我们在menu.js里边配置的icon为一个字符串，但是a-menu组件需要的icon为一个图标组件
-  // 所以这里需要把icon名称转换为icon组件
-  const genMenuIcon = (list) => {
-    for(let item of list) {
-      if (item.icon && typeof item.icon === 'string') {
-        item.icon = h(eval('icons.' + item.icon))
-      }
-
-      if (item.hasOwnProperty('children') && item.children.length > 0) {
-        genMenuIcon(item.children)
-      } else {
-        delete(item.children)
-      }
-    }
-  }
-
-  genMenuIcon(state.menu)
-})
-
 // 菜单点击事件
+const router = useRouter()
 const menuClicked = ({item, key}) => {
   // 跳转到菜单配置的path地址取
   router.push({ path: key })

@@ -6,10 +6,4 @@ import App from './App.vue'
 
 import pinia from './store'
 
-// 暂时在这里注册路由，后期会做调整
-import menu from  './store/menu'
-import initRouter from './router/generator';
-
-initRouter(menu)
-
 createApp(App).use(router).use(pinia).use(Antd).mount('#app')
