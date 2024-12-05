@@ -10,11 +10,18 @@
     okText="提交回复"
     cancelText="取消"
   >
-    <!-- 用户信息、问题描述、处理记录、相关工单等部分略 -->
-
     <!-- 回复功能 -->
     <div class="reply-section">
       <a-card>
+        <a-form
+          :model="formState"
+          name="basic"
+          :label-col="{ span: 8 }"
+          :wrapper-col="{ span: 16 }"
+          autocomplete="off"
+          @finish="onFinish"
+          @finishFailed="onFinishFailed"
+        >
       <h3>选择模版</h3>
 
       <!-- 快捷回复模板选择 -->
@@ -69,10 +76,7 @@
         </a-radio-group>
       </div>
 
-      <!-- 提交按钮 -->
-      <!-- <div style="text-align: right; margin-top: 16px;">
-        <a-button type="primary" @click="submitReply">提交回复</a-button>
-      </div> -->
+    </a-form>
     </a-card>
     </div>
   </a-modal>
