@@ -12,17 +12,17 @@ const menu = [
     component: 'Dashboard', // 菜单对应的页面组件，这个在router里边回用到
   },
   {
-    name: '系统设置',
-    label: '系统设置',
-    key: '/system',
+    name: '工单',
+    label: '工单',
+    key: '/order',
     icon: 'SettingOutlined',
     children: [ // 子菜单
       {
-        name: '用户管理',
-        label: '用户管理',
-        key: '/user/list',
+        name: '工单列表',
+        label: '工单列表',
+        key: '/order/list',
         icon: 'AppstoreOutlined',
-        component: 'UserList',
+        component: 'OrderList',
       }
     ]
   }

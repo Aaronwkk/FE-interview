@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <a-layout :style="{ overflow: 'auto', height: '100vh'}">
     <!-- 左侧部分开始 -->
     <a-layout-sider :style="{ overflow: 'auto', height: '100vh', background: theme == 'light' ? '#fff' : '#001628' }" v-model:collapsed="sideCollapsed">
       <!-- 左侧logo开始 -->
@@ -33,6 +33,7 @@
 
       <!-- 右侧页面主体开始 -->
       <a-layout-content
+        class="content"
         :style="{ margin: '12px 10px', padding: '18px', background: '#fff', minHeight: '280px', borderRadius: '4px' }"
       >
         <router-view></router-view>
@@ -137,5 +138,8 @@ import {
   float: right;
   margin-right: 20px;
   margin-top: 17px;
+}
+.content{
+  overflow: scroll;
 }
 </style>
